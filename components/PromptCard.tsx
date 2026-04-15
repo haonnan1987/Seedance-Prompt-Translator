@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { GeneratedResult } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { generateImage } from '../services/geminiService';
 
 interface PromptCardProps {
   data: GeneratedResult;
@@ -11,11 +12,27 @@ interface PromptCardProps {
 export const PromptCard: React.FC<PromptCardProps> = ({ data }) => {
   const { language, t } = useLanguage();
   const [copied, setCopied] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopied(id);
     setTimeout(() => setCopied(null), 2000);
+  };
+
+  const handleGeneratePreview = async () => {
+    setIsGenerating(true);
+    setError(null);
+    try {
+      const url = await generateImage(data.promptEn);
+      setPreviewUrl(url);
+    } catch (err: any) {
+      setError(err.message || "Failed to generate image");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const currentSummary = language === 'en' ? data.summary : data.summaryZh;
@@ -47,19 +64,33 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data }) => {
             <span className="material-icons-round text-electric-lime">auto_awesome</span>
             <h3 className="text-xl font-bold text-white/90">{t.results.storyboard}</h3>
           </div>
-          <button 
-            onClick={() => handleCopy(currentPrompt, 'main')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
-              copied === 'main' ? 'bg-electric-lime text-black' : 'bg-white/10 text-white/70 hover:bg-white/20'
-            }`}
-          >
-            <span className="material-icons-round text-sm">
-              {copied === 'main' ? 'check' : 'content_copy'}
-            </span>
-            <span className="text-xs font-bold uppercase tracking-wider">
-              {copied === 'main' ? t.card.copied : t.modal.copy}
-            </span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={handleGeneratePreview}
+              disabled={isGenerating}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all bg-white/10 text-white/70 hover:bg-white/20 disabled:opacity-50`}
+            >
+              <span className={`material-icons-round text-sm ${isGenerating ? 'animate-spin' : ''}`}>
+                {isGenerating ? 'refresh' : 'image'}
+              </span>
+              <span className="text-xs font-bold uppercase tracking-wider">
+                {isGenerating ? t.results.generating : t.results.generate_preview}
+              </span>
+            </button>
+            <button 
+              onClick={() => handleCopy(currentPrompt, 'main')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
+                copied === 'main' ? 'bg-electric-lime text-black' : 'bg-white/10 text-white/70 hover:bg-white/20'
+              }`}
+            >
+              <span className="material-icons-round text-sm">
+                {copied === 'main' ? 'check' : 'content_copy'}
+              </span>
+              <span className="text-xs font-bold uppercase tracking-wider">
+                {copied === 'main' ? t.card.copied : t.modal.copy}
+              </span>
+            </button>
+          </div>
         </div>
         <div className="p-8 bg-black/20">
           <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-electric-lime/90 selection:bg-electric-lime selection:text-black">
@@ -67,6 +98,38 @@ export const PromptCard: React.FC<PromptCardProps> = ({ data }) => {
           </pre>
         </div>
       </div>
+
+      {/* Visual Preview Section */}
+      <AnimatePresence>
+        {(previewUrl || error) && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-surface-glass backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+          >
+            <div className="p-6 border-b border-white/5 flex items-center gap-3 bg-white/5">
+              <span className="material-icons-round text-electric-lime">visibility</span>
+              <h3 className="text-lg font-bold text-white/90">{t.results.preview_title}</h3>
+            </div>
+            <div className="p-8 flex flex-col items-center">
+              {error ? (
+                <div className="text-red-400 flex items-center gap-2">
+                  <span className="material-icons-round">error_outline</span>
+                  {error}
+                </div>
+              ) : (
+                <img 
+                  src={previewUrl!} 
+                  alt="Preview" 
+                  className="w-full rounded-xl border border-white/10 shadow-lg"
+                  referrerPolicy="no-referrer"
+                />
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Grid for Suggestions and Tips */}
       <div className="grid md:grid-cols-2 gap-6">

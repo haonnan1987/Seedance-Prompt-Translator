@@ -66,7 +66,10 @@ export const translations = {
       understanding: "Understanding Confirmation",
       storyboard: "Storyboard Prompts (Copyable)",
       suggestions: "Asset Suggestions",
-      tips: "Usage Tips"
+      tips: "Usage Tips",
+      generate_preview: "Generate Preview Image",
+      generating: "Generating...",
+      preview_title: "Visual Preview"
     },
     library: {
       title: "Template Library",
@@ -151,6 +154,12 @@ export const translations = {
       params: { title: "Parameters", items: [] },
       howTo: { title: "How to Create", steps: [] },
       audience: { title: "Target Audience", items: [] }
+    },
+    docs_modal: {
+      links: "Official Links",
+      wiki_title: "Seedance 2.0 Wiki",
+      wiki_desc: "Official documentation and tutorials on Feishu",
+      open: "Open Documentation"
     }
   },
   zh: {
@@ -215,7 +224,10 @@ export const translations = {
       understanding: "意图确认",
       storyboard: "分镜提示词 (直接复制)",
       suggestions: "素材建议",
-      tips: "使用贴士"
+      tips: "使用贴士",
+      generate_preview: "生成预览图",
+      generating: "生成中...",
+      preview_title: "视觉预览"
     },
     library: {
       title: "灵感库",
@@ -300,6 +312,12 @@ export const translations = {
       params: { title: "参数", items: [] },
       howTo: { title: "如何使用", steps: [] },
       audience: { title: "目标用户", items: [] }
+    },
+    docs_modal: {
+      links: "官方链接",
+      wiki_title: "Seedance 2.0 官方维基",
+      wiki_desc: "飞书上的官方文档与教程",
+      open: "打开文档"
     }
   }
 };
