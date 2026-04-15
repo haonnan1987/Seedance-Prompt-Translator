@@ -1,12 +1,27 @@
 @import "tailwindcss";
 
-body {
+@theme {
+  --color-neural-violet: #020203;
+  --color-surface-glass: rgba(255, 255, 255, 0.03);
+  --color-surface-glass-hover: rgba(255, 255, 255, 0.08);
+  --color-electric-lime: #CCFF00;
+  --color-lime-dim: #A3CC00;
+  --color-violet-glow: #7C3AED;
+  --color-void-black: #020203;
+}
+
+html, body {
   margin: 0;
+  padding: 0;
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #050505;
+  background-color: var(--color-void-black);
   color: white;
+}
+
+.bg-grid-pattern {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
 }
 
 code {

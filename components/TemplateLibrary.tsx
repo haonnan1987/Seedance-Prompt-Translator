@@ -61,7 +61,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ templates, onS
             placeholder={t.library.search}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-full py-3 pl-12 pr-4 text-white placeholder-white/30 focus:outline-none focus:border-electric-lime/50 transition-colors"
+            className="w-full bg-black/40 backdrop-blur-md border border-white/10 rounded-full py-3 pl-12 pr-4 text-white placeholder-white/30 focus:outline-none focus:border-electric-lime/50 transition-colors"
           />
         </div>
       </div>
@@ -75,7 +75,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ templates, onS
             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors border ${
               activeTabKey === tab.key
                 ? 'bg-electric-lime/20 text-electric-lime border-electric-lime/30' 
-                : 'bg-white/5 hover:bg-white/10 text-white/70 border-white/5'
+                : 'bg-black/40 hover:bg-black/60 text-white/70 border-white/5'
             }`}
           >
             {tab.label}

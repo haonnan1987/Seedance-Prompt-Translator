@@ -60,13 +60,13 @@ export const generatePrompts = async (
 ): Promise<GeneratedResult> => {
   
   // Use VITE_ prefix for client-side env variables
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+  const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (process as any).env?.GEMINI_API_KEY;
 
   if (!apiKey) {
     throw new Error("Gemini API Key is missing. Please set VITE_GEMINI_API_KEY in your .env file.");
   }
 
-  const ai = new GoogleGenAI({ apiKey });
+  const ai = new GoogleGenAI(apiKey);
   const scenarioInstruction = SCENARIO_INSTRUCTIONS[scenario];
   
   const knowledgeBase = customKnowledge.trim() 
@@ -76,6 +76,7 @@ export const generatePrompts = async (
   const systemInstruction = `
     # ROLE: Seedance Storyboard Expert (V2.0)
     ## MISSION: Transform input into professional Seedance 2.0 prompts.
+    ## LANGUAGE: ${language}
     ## SCENARIO: ${scenario} - ${scenarioInstruction}
     ## KNOWLEDGE BASE:
     ${knowledgeBase}
@@ -94,7 +95,7 @@ export const generatePrompts = async (
   `;
 
   try {
-    const response = await ai.models.generateContent({
+    const result = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: [{ role: "user", parts: [{ text: `Generate a storyboard for: "${userInput}"` }] }],
       config: {
@@ -104,7 +105,9 @@ export const generatePrompts = async (
       }
     });
 
-    return JSON.parse(response.text) as GeneratedResult;
+    const text = result.text;
+    if (!text) throw new Error("No response text from AI");
+    return JSON.parse(text) as GeneratedResult;
   } catch (error) {
     console.error("Generation error:", error);
     throw error;
@@ -116,10 +119,10 @@ export const reverseEngineerVideo = async (
   timeRange?: { start: string, end: string },
   additionalNotes?: string
 ): Promise<{ promptZh: string, promptEn: string }> => {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+  const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (process as any).env?.GEMINI_API_KEY;
   if (!apiKey) throw new Error("API Key missing");
 
-  const ai = new GoogleGenAI({ apiKey });
+  const ai = new GoogleGenAI(apiKey);
   let promptText = "Analyze this video footage strictly. Return JSON with 'promptZh' and 'promptEn'.";
   
   if (timeRange) promptText += ` Focus on ${timeRange.start} to ${timeRange.end}.`;
@@ -134,7 +137,7 @@ export const reverseEngineerVideo = async (
   }
 
   try {
-    const response = await ai.models.generateContent({
+    const result = await ai.models.generateContent({
       model: "gemini-2.0-flash", 
       contents: [{ role: "user", parts: parts }],
       config: {
@@ -144,7 +147,9 @@ export const reverseEngineerVideo = async (
       }
     });
 
-    return JSON.parse(response.text);
+    const text = result.text;
+    if (!text) throw new Error("No response text from AI");
+    return JSON.parse(text);
   } catch (error) {
     console.error("Reverse Engineering Error:", error);
     throw error;

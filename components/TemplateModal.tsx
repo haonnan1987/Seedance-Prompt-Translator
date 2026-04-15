@@ -47,7 +47,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({ template, onClose,
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative bg-[#120F1D] border border-white/10 rounded-2xl w-full max-w-6xl h-[85vh] overflow-hidden flex flex-col md:flex-row shadow-2xl"
+        className="relative bg-void-black border border-white/10 rounded-2xl w-full max-w-6xl h-[85vh] overflow-hidden flex flex-col md:flex-row shadow-2xl"
       >
         {/* Close Button */}
         <button 
@@ -119,7 +119,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({ template, onClose,
         </div>
 
         {/* Right: Details */}
-        <div className="w-full md:w-2/5 p-6 md:p-8 flex flex-col overflow-y-auto bg-[#120F1D] border-l border-white/5 no-scrollbar h-1/2 md:h-full">
+        <div className="w-full md:w-2/5 p-6 md:p-8 flex flex-col overflow-y-auto bg-void-black border-l border-white/5 no-scrollbar h-1/2 md:h-full">
           
           {/* Header Section */}
           <div className="mb-6 flex items-start justify-between gap-4 pr-10">
@@ -174,7 +174,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({ template, onClose,
             <div>
               <div className="flex flex-wrap gap-2">
                 {template.tags.map((tag, i) => (
-                  <span key={i} className="px-4 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-sm font-medium text-white/80 transition-colors cursor-default border border-white/5">
+                  <span key={i} className="px-4 py-1.5 rounded-full bg-black/40 hover:bg-black/60 text-sm font-medium text-white/80 transition-colors cursor-default border border-white/5">
                     {tag}
                   </span>
                 ))}
@@ -182,7 +182,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({ template, onClose,
             </div>
 
             {/* English Prompt */}
-            <div className="bg-black/30 rounded-xl p-4 border border-white/5 group hover:border-white/10 transition-colors">
+            <div className="bg-black/50 rounded-xl p-4 border border-white/5 group hover:border-white/10 transition-colors">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-xs font-bold text-electric-lime uppercase tracking-widest">{t.modal.promptEn}</h3>
                 <button 
@@ -200,7 +200,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({ template, onClose,
             </div>
 
             {/* Chinese Prompt */}
-            <div className="bg-black/30 rounded-xl p-4 border border-white/5 group hover:border-white/10 transition-colors">
+            <div className="bg-black/50 rounded-xl p-4 border border-white/5 group hover:border-white/10 transition-colors">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-xs font-bold text-violet-400 uppercase tracking-widest">{t.modal.promptCn}</h3>
                 <button 
